@@ -163,83 +163,6 @@ class Line(object):
                 # **** LINE template-message call **** #
                 if user_input == 'template':
 
-                    # make response with template
-                    # send_content = {
-                    #     'replyToken': event['replyToken'],
-                    #     'messages': [
-                    #         {
-                    #             'type': 'text',
-                    #             'text': 'template-message call'
-                    #         },
-                    #         # Buttons
-                    #         # {
-                    #         #     "type": "template",
-                    #         #     "altText": "this is a buttons template",
-                    #         #     "template": {
-                    #         #         "type": "buttons",
-                    #         #         "thumbnailImageUrl": "http://www.tis.co.jp/common/images/logo_tis.png",
-                    #         #         "title": "TIS Buttons",
-                    #         #         "text": "Please select",
-                    #         #         "actions": [
-                    #         #             {
-                    #         #                 "type": "postback",
-                    #         #                 "label": "yes!",
-                    #         #                 "res": "yes!"
-                    #         #             },
-                    #         #             {
-                    #         #                 "type": "postback",
-                    #         #                 "label": "no!",
-                    #         #                 "res": "no!"
-                    #         #             },
-                    #         #             {
-                    #         #                 "type": "uri",
-                    #         #                 "label": "社長ご挨拶",
-                    #         #                 "uri": "http://www.tis.co.jp/company/about/"
-                    #         #             }
-                    #         #         ]
-                    #         #     }
-                    #         # },
-                    #         # Confirm
-                    #
-                    #         # Carousel
-                    #         {
-                    #             "type": "template",
-                    #             "altText": "TIS関連サイト",
-                    #             "template": {
-                    #                 "type": "carousel",
-                    #                 "columns": [
-                    #
-                    #                     {
-                    #                         "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
-                    #                         "title": "TIS株式会社",
-                    #                         "text": "TIS、自律移動型ロボット開発ベンチャーのSEQSENSEへ出資",
-                    #                         "actions": [
-                    #
-                    #                             {
-                    #                                 "type": "uri",
-                    #                                 "label": "詳細を見る",
-                    #                                 "uri": "https://www.tis.co.jp/"
-                    #                             }
-                    #                         ]
-                    #                     },
-                    #                     {
-                    #                         "thumbnailImageUrl": "http://www.tis.co.jp/recruit/shared/img/img_footer_recruiting_pc.gif",
-                    #                         "title": "TIS新卒",
-                    #                         "text": "2017.1.28　2018年度新卒採用サイトをリニューアルオープンしました！",
-                    #                         "actions": [
-                    #
-                    #                             {
-                    #                                 "type": "uri",
-                    #                                 "label": "詳細を見る",
-                    #                                 "uri": "http://www.tis.co.jp/recruit/"
-                    #                             }
-                    #                         ]
-                    #                     },
-                    #                 ]
-                    #             }
-                    #         }
-                    #     ]
-                    # }
                     send_content = {
                         'replyToken': event['replyToken'],
                         "messages": [
@@ -247,6 +170,55 @@ class Line(object):
                                 'type': 'text',
                                 'text': 'template-message called'
                             },
+                            # Buttons
+                            {
+                                "type": "template",
+                                "altText": "this is a confirm template",
+                                "template": {
+                                    "type": "buttons",
+                                    "thumbnailImageUrl": "https://dimora.jp/pushimg/3/301693000238_h.jpg",
+                                    "text": "沈黙見る？",
+                                    "actions": [
+                                        {
+                                            "type": "message",
+                                            "label": "Yes",
+                                            "text": "yes"
+                                        },
+                                        {
+                                            "type": "message",
+                                            "label": "No",
+                                            "text": "no"
+                                        },
+                                        {
+                                            "type": "uri",
+                                            "label": "詳細を",
+                                            "uri": "https://ja.wikipedia.org/wiki/%E6%B2%88%E9%BB%99_-%E3%82%B5%E3%82%A4%E3%83%AC%E3%83%B3%E3%82%B9-"
+                                         }
+                                    ]
+                                }
+                            },
+                            # Confirm
+                            {
+                                "type": "template",
+                                "altText": "this is a confirm template",
+                                "template": {
+                                    "type": "confirm",
+                                    "text": "Are you sure?",
+                                    "actions": [
+                                        {
+                                            "type": "message",
+                                            "label": "Yes",
+                                            "text": "yes"
+                                        },
+                                        {
+                                            "type": "message",
+                                            "label": "No",
+                                            "text": "no"
+                                        }
+                                    ]
+                                }
+                            },
+                            # Carousel
                             {
                                 "type": "template",
                                 "altText": "おすすめレストラン",
