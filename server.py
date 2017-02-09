@@ -346,9 +346,11 @@ class Line(object):
 class LinePush(object):
     def on_post(self, req, resp):
         self.push_message()
+        self.get_profile()
 
     def on_get(self, req, resp):
         self.push_message()
+        self.get_profile()
 
     def push_message(self):
 
@@ -366,6 +368,7 @@ class LinePush(object):
                     }
                 ]
             }
+            # NG. Why not? --> 'https://api.line.me/v2/bot/message/multicast',
             line_res = requests.post(
                 'https://api.line.me/v2/bot/message/push',
                 json.dumps(json_data),
@@ -377,6 +380,21 @@ class LinePush(object):
                                    'LINE API Error. ',
                                    'Could not invoke LINE api.')
         resjson = line_res.json()
+        return resjson
+
+    def get_profile(self):
+        try:
+            line_res = requests.get(
+                'https://api.line.me/v2/bot/profile/' + "U69b93081ef731fdaf077813f65296ebc",
+                headers=Line.header
+            )
+        except Exception:
+            print('Exception:' + Exception)
+            raise falcon.HTTPError(falcon.HTTP_503,
+                                   'LINE API Error. ',
+                                   'Could not invoke LINE api.')
+        resjson = line_res.json()
+        print(resjson)
         return resjson
 
 app = falcon.API()
