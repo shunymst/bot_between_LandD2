@@ -15,10 +15,6 @@ DOCOMO_API_KEY = os.environ.get('DOCOMO_API_KEY', '')
 print('LINE_CHANNEL_ACCESS_TOKEN:' + LINE_CHANNEL_ACCESS_TOKEN)
 print('DOCOMO_API_KEY:' + DOCOMO_API_KEY)
 
-for env in os.environ:
-    print(env)
-
-
 class Line(object):
     # docomo context
     contextId = ""
@@ -69,7 +65,7 @@ class Line(object):
                     "lon": "35.681382" # no matter?
                 },
                 "userUtterance": {
-                    "utteranceText": input
+                    "utteranceText": "これは、固定分の意図解釈を実施しています。" #input
                 }
             }
             docomo_res = requests.post(
@@ -158,54 +154,214 @@ class Line(object):
         for event in receive_params['events']:
 
             if event['type'] == 'message':
-                # docomo API call
 
-                # **** dialogue **** #
-                resjson = self.call_dialogue(event['message']['text'], self.contextId)
-                sys_utt = resjson['utt']
-                self.contextId = resjson["context"]
+                # define
+                user_input = event['message']['text']
 
-                # **** sentenceUnderstanding **** #
-                if (event['message']['text'] == 'u'):
-                    resjson_sentenceUnderstanding = self.call_sentenceUnderstanding(event['message']['text'], self.contextId)
-                    # overwrite sys_utt
-                    sys_utt = json.dumps(resjson_sentenceUnderstanding, ensure_ascii=False)
+                # switch
 
-                # **** scenarioDialogue **** #
+                # **** LINE template-message call **** #
+                if user_input == 'template':
 
-                if (event['message']['text'] == 's'):
-                    # init mode
-                    print('call_scenarioDialogueInit')
-                    resjson_scenarioDialogue = self.call_scenarioDialogueInit()
-                    self.appUserId = resjson_scenarioDialogue['appUserId']
+                    # make response with template
+                    # send_content = {
+                    #     'replyToken': event['replyToken'],
+                    #     'messages': [
+                    #         {
+                    #             'type': 'text',
+                    #             'text': 'template-message call'
+                    #         },
+                    #         # Buttons
+                    #         # {
+                    #         #     "type": "template",
+                    #         #     "altText": "this is a buttons template",
+                    #         #     "template": {
+                    #         #         "type": "buttons",
+                    #         #         "thumbnailImageUrl": "http://www.tis.co.jp/common/images/logo_tis.png",
+                    #         #         "title": "TIS Buttons",
+                    #         #         "text": "Please select",
+                    #         #         "actions": [
+                    #         #             {
+                    #         #                 "type": "postback",
+                    #         #                 "label": "yes!",
+                    #         #                 "res": "yes!"
+                    #         #             },
+                    #         #             {
+                    #         #                 "type": "postback",
+                    #         #                 "label": "no!",
+                    #         #                 "res": "no!"
+                    #         #             },
+                    #         #             {
+                    #         #                 "type": "uri",
+                    #         #                 "label": "社長ご挨拶",
+                    #         #                 "uri": "http://www.tis.co.jp/company/about/"
+                    #         #             }
+                    #         #         ]
+                    #         #     }
+                    #         # },
+                    #         # Confirm
+                    #
+                    #         # Carousel
+                    #         {
+                    #             "type": "template",
+                    #             "altText": "TIS関連サイト",
+                    #             "template": {
+                    #                 "type": "carousel",
+                    #                 "columns": [
+                    #
+                    #                     {
+                    #                         "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
+                    #                         "title": "TIS株式会社",
+                    #                         "text": "TIS、自律移動型ロボット開発ベンチャーのSEQSENSEへ出資",
+                    #                         "actions": [
+                    #
+                    #                             {
+                    #                                 "type": "uri",
+                    #                                 "label": "詳細を見る",
+                    #                                 "uri": "https://www.tis.co.jp/"
+                    #                             }
+                    #                         ]
+                    #                     },
+                    #                     {
+                    #                         "thumbnailImageUrl": "http://www.tis.co.jp/recruit/shared/img/img_footer_recruiting_pc.gif",
+                    #                         "title": "TIS新卒",
+                    #                         "text": "2017.1.28　2018年度新卒採用サイトをリニューアルオープンしました！",
+                    #                         "actions": [
+                    #
+                    #                             {
+                    #                                 "type": "uri",
+                    #                                 "label": "詳細を見る",
+                    #                                 "uri": "http://www.tis.co.jp/recruit/"
+                    #                             }
+                    #                         ]
+                    #                     },
+                    #                 ]
+                    #             }
+                    #         }
+                    #     ]
+                    # }
+                    send_content = {
+                        'replyToken': event['replyToken'],
+                        "messages": [
+                            {
+                                'type': 'text',
+                                'text': 'template-message called'
+                            },
+                            {
+                                "type": "template",
+                                "altText": "おすすめレストラン",
+                                "template": {
+                                    "type": "carousel",
+                                    "columns": [
 
-                    # overwrite sys_utt
-                    sys_utt = 'シナリオモード開始。「init」とタイプしてね！'
+                                        {
+                                            "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
+                                            "title": "TIS株式会社",
+                                            "text": "TIS、自律移動型ロボット開発ベンチャーのSEQSENSEへ出資",
+                                            "actions": [
+
+                                                {
+                                                    "type": "uri",
+                                                    "label": "詳細を見る",
+                                                    "uri": "https://www.tis.co.jp"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
+                                            "title": "TIS新卒",
+                                            "text": "2017.1.28　2018年度新卒採用サイトをリニューアルオープンしました！",
+                                            "actions": [
+
+                                                {
+                                                    "type": "uri",
+                                                    "label": "詳細を見る",
+                                                    "uri": "http://www.tis.co.jp/recruit"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
+                                            "title": "TIS株式会社",
+                                            "text": "TIS、自律移動型ロボット開発ベンチャーのSEQSENSEへ出資",
+                                            "actions": [
+
+                                                {
+                                                    "type": "uri",
+                                                    "label": "詳細を見る",
+                                                    "uri": "https://www.tis.co.jp"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "thumbnailImageUrl": "https://www.tis.co.jp/common/images/logo_tis.png",
+                                            "title": "TIS新卒",
+                                            "text": "2017.1.28　2018年度新卒採用サイトをリニューアルオープンしました！",
+                                            "actions": [
+
+                                                {
+                                                    "type": "uri",
+                                                    "label": "詳細を見る",
+                                                    "uri": "http://www.tis.co.jp/recruit"
+                                                }
+                                            ]
+                                        },
+
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+
                 else:
-                    # scenario mode
-                    print('call_scenarioDialogue')
-                    resjson_scenarioDialogue = self.call_scenarioDialogue(event['message']['text'],
+
+                    # **** docomo API call **** #
+
+                    # **** sentenceUnderstanding **** #
+                    if user_input == 'u':
+                        resjson_sentenceUnderstanding = self.call_sentenceUnderstanding(user_input, self.contextId)
+                        # overwrite sys_utt
+                        sys_utt = json.dumps(resjson_sentenceUnderstanding, ensure_ascii=False)
+
+                    # **** scenarioDialogue **** #
+                    elif user_input == 's':
+                        # init mode
+                        print('call_scenarioDialogueInit')
+                        resjson_scenarioDialogue = self.call_scenarioDialogueInit()
+                        self.appUserId = resjson_scenarioDialogue['appUserId']
+
+                        # overwrite sys_utt
+                        sys_utt = 'シナリオモード開始。「init」とタイプしてね！'
+
+                    elif self.appUserId != '':
+                        # scenario mode
+                        print('call_scenarioDialogue')
+                        resjson_scenarioDialogue = self.call_scenarioDialogue(user_input,
                                                                               self.appUserId, self.serverSendTime)
-                    print(json.dumps(resjson_scenarioDialogue, ensure_ascii=False))
+                        print(json.dumps(resjson_scenarioDialogue, ensure_ascii=False))
 
-                    # store docomo receivedtime
-                    self.serverSendTime = resjson_scenarioDialogue['serverSendTime']
-                    # overwrite sys_utt
-                    # sys_utt = json.dumps(resjson_scenarioDialogue, ensure_ascii=False)
-                    sys_utt = json.dumps(resjson_scenarioDialogue['systemText']['expression'], ensure_ascii=False)
+                        # store docomo receivedtime
+                        self.serverSendTime = resjson_scenarioDialogue['serverSendTime']
+                        # overwrite sys_utt
+                        # sys_utt = json.dumps(resjson_scenarioDialogue, ensure_ascii=False)
+                        sys_utt = json.dumps(resjson_scenarioDialogue['systemText']['expression'], ensure_ascii=False)
 
-                # make response
-                send_content = {
-                    'replyToken': event['replyToken'],
-                    'messages': [
-                        {
-                            'type': 'text',
-                            'text': sys_utt
-                        }
+                    # **** dialogue **** #
+                    else:
+                        resjson = self.call_dialogue(user_input, self.contextId)
+                        sys_utt = resjson['utt']
+                        self.contextId = resjson["context"]
 
-                    ]
-                }
-
+                    # make response
+                    send_content = {
+                        'replyToken': event['replyToken'],
+                        'messages': [
+                            {
+                                'type': 'text',
+                                'text': sys_utt
+                            }
+                        ]
+                    }
                 # LINE response
                 send_content = json.dumps(send_content)
                 # logger.debug('send_content: {}'.format(send_content))
@@ -241,9 +397,8 @@ class LinePush(object):
             line_res = requests.post(
                 'https://api.line.me/v2/bot/message/push',
                 json.dumps(json_data),
-                headers={'Content-Type': 'application/json',
-                         'Authorization': 'Bearer ' + LINE_CHANNEL_ACCESS_TOKEN
-                         })
+                headers=Line.header
+                         )
         except Exception:
             print('Exception:' + Exception)
             raise falcon.HTTPError(falcon.HTTP_503,
